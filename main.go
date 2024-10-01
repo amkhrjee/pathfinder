@@ -172,13 +172,22 @@ func main() {
 					Y:      float32(box.row * BOX_DIM),
 					Width:  float32(BOX_DIM),
 					Height: float32(BOX_DIM)}
-				rl.DrawRectangleRec(r, rl.Black)
+				rl.DrawRectangleRec(r, rl.Green)
 				trackIndex++
+
 				timer = 0.0
 			}
 		}
-
+		for _, t := range track[:trackIndex] {
+			r := rl.Rectangle{
+				X:      float32(t.col * BOX_DIM),
+				Y:      float32(t.row * BOX_DIM),
+				Width:  float32(BOX_DIM),
+				Height: float32(BOX_DIM)}
+			rl.DrawRectangleRec(r, rl.Green)
+		}
 		if track != nil && trackIndex >= len(track) {
+
 			r := rl.Rectangle{
 				X:      float32(track[len(track)-1].col * BOX_DIM),
 				Y:      float32(track[len(track)-1].row * BOX_DIM),
