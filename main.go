@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"pfinder/algorithm"
 	"pfinder/grid"
 
+	rgui "github.com/gen2brain/raylib-go/raygui"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -25,12 +27,16 @@ func makeGrid() *grid.Grid {
 	return &g
 }
 
+func button(index int) rl.Rectangle {
+	return rl.Rectangle{X: float32(10*(index+1)) + float32(index*250), Y: 815, Width: 250, Height: 70}
+}
+
 func main() {
 	const WindowTitle = "Path Finder"
 
 	g := makeGrid()
 
-	rl.InitWindow(grid.WIDTH, grid.HEIGHT, WindowTitle)
+	rl.InitWindow(grid.WIDTH, grid.HEIGHT+100, WindowTitle)
 	defer rl.CloseWindow()
 
 	rl.SetTargetFPS(60)
@@ -45,13 +51,28 @@ func main() {
 	timer := float32(0.)
 	trackIndex := 0
 
+	message := "Visualise search algorithms in a fun way!"
+
+	showMessage := true
+
+	rgui.LoadStyle("./style_bluish.rgs")
+	rgui.SetStyle(rgui.DEFAULT, rgui.TEXT_SIZE, 20)
+	// rgui.SetStyle(rgui.icn, rgui., 20)
+	rl.SetWindowIcon(*rl.LoadImage("./assets/windowicon.png"))
+	algo_name := "A* Search"
+
+	message_box := rl.Rectangle{X: 150, Y: 250, Height: 250, Width: 500}
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 
 		timer += rl.GetFrameTime()
 
-		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
+		rgui.Button(button(0), "#72#Reset")
+		rgui.Button(button(1), "#90#Obstacles")
+		rgui.Button(button(2), fmt.Sprintf("#62#%s", algo_name))
+
+		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) && !showMessage {
 			m := rl.GetMousePosition()
 			selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
 			selected.IsSource = !selected.IsSource
@@ -59,7 +80,7 @@ func main() {
 			source = selected
 		}
 
-		if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
+		if rl.IsMouseButtonPressed(rl.MouseButtonRight) && !showMessage {
 			m := rl.GetMousePosition()
 			selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
 			selected.IsTarget = !selected.IsTarget
@@ -129,6 +150,14 @@ func main() {
 				Height: float32(grid.BOX_DIM)}
 			rl.DrawRectangleRec(r, rl.Pink)
 
+		}
+
+		if showMessage {
+			rl.DrawRectangleRec(message_box, rl.RayWhite)
+			res := rgui.MessageBox(message_box, "#191#Pathfinder v0.1.1 October 2024", message, "Cool!")
+			if res >= 0 {
+				showMessage = false
+			}
 		}
 
 		rl.EndDrawing()
