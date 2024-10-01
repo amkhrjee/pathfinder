@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 	"slices"
@@ -10,14 +11,16 @@ import (
 )
 
 const WIDTH, HEIGHT = 800, 800
-const BOX_DIM = 80
+const BOX_DIM = 40
 
 type Box struct {
-	row       int32
-	col       int32
-	cost      int
-	is_source bool
-	is_target bool
+	row             int32
+	col             int32
+	cost            int
+	is_source       bool
+	is_target       bool
+	cumulative_cost float64
+	parent          *Box
 }
 
 const ROWS = HEIGHT / BOX_DIM
@@ -43,11 +46,13 @@ func makeGrid() *Grid {
 	for i, row := range g {
 		for j := range row {
 			g[i][j] = Box{
-				row:       int32(i),
-				col:       int32(j),
-				is_source: false,
-				is_target: false,
-				cost:      rand.Intn(10-1) + 1,
+				row:             int32(i),
+				col:             int32(j),
+				is_source:       false,
+				is_target:       false,
+				cost:            rand.Intn(10-1) + 1,
+				cumulative_cost: math.Inf(0),
+				parent:          nil,
 			}
 		}
 	}
@@ -77,13 +82,16 @@ func neighbors(g *Grid, b *Box) []*Box {
 }
 
 // Uniform Cost Search
-func ucs(grid *Grid, start *Box, target *Box) []*Box {
+func ucs(grid *Grid, start *Box, target *Box) ([]*Box, []*Box) {
 	root := start
 	q := pq.New[*Box, float64](pq.MinHeap)
 	track := make([]*Box, 0)
+	final_path := make([]*Box, 0)
 	// inserting the initial nodes
 	for _, n := range neighbors(grid, root) {
-		q.Put(n, math.Abs(float64(n.cost-root.cost)))
+		relative_cost := math.Abs(float64(n.cost - root.cost))
+		q.Put(n, relative_cost)
+		n.cumulative_cost = relative_cost
 	}
 	for !q.IsEmpty() {
 		curr := q.Get()
@@ -93,12 +101,28 @@ func ucs(grid *Grid, start *Box, target *Box) []*Box {
 		}
 
 		for _, n := range neighbors(grid, curr.Value) {
-			if !slices.Contains(track, n) {
-				q.Put(n, curr.Priority+math.Abs(float64(n.cost-curr.Value.cost)))
+			if !slices.Contains(track, n) && n != start {
+				total_cost := curr.Priority + math.Abs(float64(n.cost-curr.Value.cost))
+				q.Put(n, total_cost)
+				n.cumulative_cost = total_cost
+				n.parent = curr.Value
 			}
 		}
 	}
-	return track
+
+	fmt.Printf("Cost of start: %1.f\n", start.cumulative_cost)
+	fmt.Printf("Cost of target: %1.f\n", target.cumulative_cost)
+
+	// backtracking the path
+	curr := target
+	for curr != nil {
+		final_path = append(final_path, curr)
+		curr = curr.parent
+	}
+
+	fmt.Println("Length of final path: ", len(final_path))
+
+	return track, final_path
 }
 
 func main() {
@@ -116,6 +140,7 @@ func main() {
 	var source *Box = nil
 	var target *Box = nil
 	var track []*Box = nil
+	var final_path []*Box = nil
 
 	timer := float32(0.)
 	trackIndex := 0
@@ -132,18 +157,20 @@ func main() {
 			selected.is_source = !selected.is_source
 			source_set = true
 			source = selected
+			source.cumulative_cost = 0
 		}
 
 		if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
 			m := rl.GetMousePosition()
 			selected := &grid[int(m.Y/BOX_DIM)][int(m.X/BOX_DIM)]
 			selected.is_target = !selected.is_target
+			selected.cumulative_cost = 0
 			target_set = true
 			target = selected
 		}
 
 		if source_set && target_set && track == nil {
-			track = ucs(grid, source, target)
+			track, final_path = ucs(grid, source, target)
 		}
 
 		for _, row := range grid {
@@ -165,7 +192,7 @@ func main() {
 		}
 
 		if track != nil && trackIndex < len(track) {
-			if timer >= 0.2 {
+			if timer >= 0.1 {
 				box := track[trackIndex]
 				r := rl.Rectangle{
 					X:      float32(box.col * BOX_DIM),
@@ -177,16 +204,25 @@ func main() {
 
 				timer = 0.0
 			}
-		}
-		for _, t := range track[:trackIndex] {
-			r := rl.Rectangle{
-				X:      float32(t.col * BOX_DIM),
-				Y:      float32(t.row * BOX_DIM),
-				Width:  float32(BOX_DIM),
-				Height: float32(BOX_DIM)}
-			rl.DrawRectangleRec(r, rl.Green)
+			for _, t := range track[:trackIndex] {
+				r := rl.Rectangle{
+					X:      float32(t.col * BOX_DIM),
+					Y:      float32(t.row * BOX_DIM),
+					Width:  float32(BOX_DIM),
+					Height: float32(BOX_DIM)}
+				rl.DrawRectangleRec(r, rl.Green)
+			}
 		}
 		if track != nil && trackIndex >= len(track) {
+
+			for _, f := range final_path {
+				r := rl.Rectangle{
+					X:      float32(f.col * BOX_DIM),
+					Y:      float32(f.row * BOX_DIM),
+					Width:  float32(BOX_DIM),
+					Height: float32(BOX_DIM)}
+				rl.DrawRectangleRec(r, rl.Red)
+			}
 
 			r := rl.Rectangle{
 				X:      float32(track[len(track)-1].col * BOX_DIM),
@@ -194,6 +230,7 @@ func main() {
 				Width:  float32(BOX_DIM),
 				Height: float32(BOX_DIM)}
 			rl.DrawRectangleRec(r, rl.Pink)
+
 		}
 
 		rl.EndDrawing()
