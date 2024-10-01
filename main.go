@@ -22,7 +22,6 @@ func makeGrid() *grid.Grid {
 			}
 		}
 	}
-
 	return &g
 }
 

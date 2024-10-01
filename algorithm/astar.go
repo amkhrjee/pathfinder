@@ -12,7 +12,7 @@ func get_distance(x *grid.Box, y *grid.Box) float64 {
 	return math.Sqrt(math.Pow(float64(x.Col-y.Col), 2) + math.Pow(float64(x.Row-y.Row), 2))
 }
 
-// Uniform Cost Search
+// A* Search
 func AStar(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.Box) {
 	root := start
 	q := pq.New[*grid.Box, float64](pq.MinHeap)
