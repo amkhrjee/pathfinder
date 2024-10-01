@@ -1,0 +1,10 @@
+github.com/ebitengine/purego v0.7.1 h1:6/55d26lG3o9VCZX8lping+bZcmShseiqlh2bnUDiPA=
+github.com/ebitengine/purego v0.7.1/go.mod h1:ah1In8AOtksoNK6yk5z1HTJeUkC1Ez4Wk2idgGslMwQ=
+github.com/gen2brain/raylib-go/raylib v0.0.0-20240930075631-c66f9e2942fe h1:mInjrbJkUglTM7tBmXG+epnPCE744aj15J7vjJwM4gs=
+github.com/gen2brain/raylib-go/raylib v0.0.0-20240930075631-c66f9e2942fe/go.mod h1:BaY76bZk7nw1/kVOSQObPY1v1iwVE1KHAGMfvI6oK1Q=
+golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 h1:vr/HnozRka3pE4EsMEg1lgkXJkTFJCVUX+S/ZT6wYzM=
+golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842/go.mod h1:XtvwrStGgqGPLc4cjQfWqZHG1YFdYs6swckp8vpsjnc=
+golang.org/x/sys v0.20.0 h1:Od9JTbYCk261bKm4M/mw7AklTlFYIa0bIp9BgSm1S8Y=
+golang.org/x/sys v0.20.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+gopkg.in/dnaeon/go-priorityqueue.v1 v1.1.1 h1:AS4IIyStH/47cZpPdBk/Db6QXg+UmcDjZvSOoDgGsbU=
+gopkg.in/dnaeon/go-priorityqueue.v1 v1.1.1/go.mod h1:JNUtwj2QQsBHhsIHNjxdDaSmLW4RZtvJHO8VYtsMkY4=
