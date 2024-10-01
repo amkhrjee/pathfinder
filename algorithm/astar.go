@@ -8,7 +8,12 @@ import (
 	pq "gopkg.in/dnaeon/go-priorityqueue.v1"
 )
 
-func Ucs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.Box) {
+func get_distance(x *grid.Box, y *grid.Box) float64 {
+	return math.Sqrt(math.Pow(float64(x.Col-y.Col), 2) + math.Pow(float64(x.Row-y.Row), 2))
+}
+
+// Uniform Cost Search
+func AStar(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.Box) {
 	root := start
 	q := pq.New[*grid.Box, float64](pq.MinHeap)
 	track := make([]*grid.Box, 0)
@@ -16,7 +21,8 @@ func Ucs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.
 	// inserting the initial nodes
 	for _, n := range neighbors(g, root) {
 		relative_cost := math.Abs(float64(n.Cost - root.Cost))
-		q.Put(n, relative_cost)
+		euclidean_dist := get_distance(target, n)
+		q.Put(n, relative_cost+euclidean_dist)
 	}
 	for !q.IsEmpty() {
 		curr := q.Get()
@@ -27,7 +33,9 @@ func Ucs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.
 
 		for _, n := range neighbors(g, curr.Value) {
 			if !slices.Contains(track, n) && n != start {
-				total_cost := curr.Priority + math.Abs(float64(n.Cost-curr.Value.Cost))
+				euclidean_dist := get_distance(target, n)
+				relative_cost := math.Abs(float64(n.Cost - curr.Value.Cost))
+				total_cost := curr.Priority + relative_cost + euclidean_dist
 				q.Put(n, total_cost)
 				n.Parent = curr.Value
 			}

@@ -69,7 +69,7 @@ func main() {
 		}
 
 		if source_set && target_set && track == nil {
-			track, final_path = algorithm.Ucs(g, source, target)
+			track, final_path = algorithm.AStar(g, source, target)
 		}
 
 		for _, row := range g {
@@ -91,19 +91,19 @@ func main() {
 		}
 
 		if track != nil && trackIndex < len(track) {
-			if timer >= 0.1 {
+			if timer >= 0.05 {
 				box := track[trackIndex]
 				r := rl.Rectangle{
 					X:      float32(box.Col * grid.BOX_DIM),
 					Y:      float32(box.Row * grid.BOX_DIM),
 					Width:  float32(grid.BOX_DIM),
 					Height: float32(grid.BOX_DIM)}
-				rl.DrawRectangleRec(r, rl.Green)
+				rl.DrawRectangleRec(r, rl.Blue)
 				trackIndex++
 
 				timer = 0.0
 			}
-			for _, t := range track[:trackIndex] {
+			for _, t := range track[:trackIndex-1] {
 				r := rl.Rectangle{
 					X:      float32(t.Col * grid.BOX_DIM),
 					Y:      float32(t.Row * grid.BOX_DIM),
