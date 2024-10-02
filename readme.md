@@ -29,3 +29,5 @@ Run the following to run the binary:
 go env -w CGO_ENABLED=1
 go run ./main.go
 ```
+- Left Click to select a starting point
+- Right Click to select a target point
