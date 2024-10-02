@@ -4,6 +4,7 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 
 const WIDTH, HEIGHT = 800, 800
 const BOX_DIM = 40
+const PADDING = 4
 
 type Box struct {
 	Row      int32

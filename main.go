@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"pfinder/algorithm"
 	"pfinder/grid"
@@ -51,54 +50,88 @@ func main() {
 	timer := float32(0.)
 	trackIndex := 0
 
-	message := "Visualise search algorithms in a fun way!"
-
-	showMessage := true
-
 	rgui.LoadStyle("./style_bluish.rgs")
 	rgui.SetStyle(rgui.DEFAULT, rgui.TEXT_SIZE, 20)
-	// rgui.SetStyle(rgui.icn, rgui., 20)
 	rl.SetWindowIcon(*rl.LoadImage("./assets/windowicon.png"))
+	is_astar := true
 	algo_name := "A* Search"
 
-	message_box := rl.Rectangle{X: 150, Y: 250, Height: 250, Width: 500}
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 
+		rgui.Label(
+			rl.Rectangle{
+				X:      float32(50*(1+1)) + float32(1*250),
+				Y:      815,
+				Width:  100,
+				Height: 70,
+			},
+			"@amkhrjee",
+		)
+
 		timer += rl.GetFrameTime()
 
-		rgui.Button(button(0), "#72#Reset")
-		rgui.Button(button(1), "#90#Obstacles")
-		rgui.Button(button(2), fmt.Sprintf("#62#%s", algo_name))
-
-		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) && !showMessage {
-			m := rl.GetMousePosition()
-			selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
-			selected.IsSource = !selected.IsSource
-			source_set = true
-			source = selected
+		if rgui.Button(button(0), "#211#Reset") || rl.IsKeyPressed(rl.KeyR) {
+			if source != nil {
+				source.IsSource = false
+				source = nil
+			}
+			if target != nil {
+				target.IsTarget = false
+				target = nil
+			}
+			source_set = false
+			target_set = false
+			track = nil
+			final_path = nil
+			timer = float32(0.)
+			trackIndex = 0
+		}
+		if rgui.Button(button(2), "#62#"+algo_name) {
+			is_astar = !is_astar
+			if is_astar {
+				algo_name = "A* Search"
+			} else {
+				algo_name = "Djikstra UCS"
+			}
 		}
 
-		if rl.IsMouseButtonPressed(rl.MouseButtonRight) && !showMessage {
+		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
 			m := rl.GetMousePosition()
-			selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
-			selected.IsTarget = !selected.IsTarget
-			target_set = true
-			target = selected
+			if m.Y < 800 && !source_set {
+				selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
+				selected.IsSource = !selected.IsSource
+				source_set = true
+				source = selected
+			}
+		}
+
+		if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
+			m := rl.GetMousePosition()
+			if m.Y < 800 && !target_set {
+				selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
+				selected.IsTarget = !selected.IsTarget
+				target_set = true
+				target = selected
+			}
 		}
 
 		if source_set && target_set && track == nil {
-			track, final_path = algorithm.AStar(g, source, target)
+			if is_astar {
+				track, final_path = algorithm.AStar(g, source, target)
+			} else {
+				track, final_path = algorithm.Ucs(g, source, target)
+			}
 		}
 
 		for _, row := range g {
 			for _, box := range row {
 				r := rl.Rectangle{
-					X:      float32(box.Col * grid.BOX_DIM),
-					Y:      float32(box.Row * grid.BOX_DIM),
-					Width:  float32(grid.BOX_DIM),
-					Height: float32(grid.BOX_DIM)}
+					X:      float32(box.Col*grid.BOX_DIM + grid.PADDING),
+					Y:      float32(box.Row*grid.BOX_DIM + grid.PADDING),
+					Width:  float32(grid.BOX_DIM - 2*grid.PADDING),
+					Height: float32(grid.BOX_DIM) - 2*grid.PADDING}
 
 				if box.IsSource {
 					rl.DrawRectangleLinesEx(r, 10.0, rl.Blue)
@@ -129,35 +162,27 @@ func main() {
 					Y:      float32(t.Row * grid.BOX_DIM),
 					Width:  float32(grid.BOX_DIM),
 					Height: float32(grid.BOX_DIM)}
-				rl.DrawRectangleRec(r, rl.Green)
+				rl.DrawRectangleRec(r, rl.Pink)
 			}
 		}
 		if track != nil && trackIndex >= len(track) {
 
 			for _, f := range final_path {
 				r := rl.Rectangle{
-					X:      float32(f.Col * grid.BOX_DIM),
-					Y:      float32(f.Row * grid.BOX_DIM),
-					Width:  float32(grid.BOX_DIM),
-					Height: float32(grid.BOX_DIM)}
+					X:      float32(f.Col*grid.BOX_DIM + grid.PADDING),
+					Y:      float32(f.Row*grid.BOX_DIM + grid.PADDING),
+					Width:  float32(grid.BOX_DIM - 2*grid.PADDING),
+					Height: float32(grid.BOX_DIM) - 2*grid.PADDING}
 				rl.DrawRectangleRec(r, rl.Red)
 			}
 
 			r := rl.Rectangle{
-				X:      float32(track[len(track)-1].Col * grid.BOX_DIM),
-				Y:      float32(track[len(track)-1].Row * grid.BOX_DIM),
-				Width:  float32(grid.BOX_DIM),
-				Height: float32(grid.BOX_DIM)}
-			rl.DrawRectangleRec(r, rl.Pink)
+				X:      float32(track[len(track)-1].Col*grid.BOX_DIM + grid.PADDING),
+				Y:      float32(track[len(track)-1].Row*grid.BOX_DIM + grid.PADDING),
+				Width:  float32(grid.BOX_DIM - 2*grid.PADDING),
+				Height: float32(grid.BOX_DIM - 2*grid.PADDING)}
+			rl.DrawRectangleRec(r, rl.Green)
 
-		}
-
-		if showMessage {
-			rl.DrawRectangleRec(message_box, rl.RayWhite)
-			res := rgui.MessageBox(message_box, "#191#Pathfinder v0.1.1 October 2024", message, "Cool!")
-			if res >= 0 {
-				showMessage = false
-			}
 		}
 
 		rl.EndDrawing()
