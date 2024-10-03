@@ -58,17 +58,7 @@ func main() {
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.Black)
-
-		// rgui.Label(
-		// 	rl.Rectangle{
-		// 		X:      float32(50*(1+1)) + float32(1*250),
-		// 		Y:      815,
-		// 		Width:  100,
-		// 		Height: 70,
-		// 	},
-		// 	"@amkhrjee",
-		// )
+		rl.ClearBackground(rl.RayWhite)
 
 		timer += rl.GetFrameTime()
 
@@ -96,7 +86,7 @@ func main() {
 
 		rgui.Button(button(1), "#142# Settings")
 
-		if rgui.Button(button(2), "#42# "+algo_name) {
+		if rgui.Button(button(2), "#97# "+algo_name) {
 			is_astar = !is_astar
 			if is_astar {
 				algo_name = "A* Search"
