@@ -25,6 +25,7 @@ func AStar(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*gri
 		q.Put(n, relative_cost+euclidean_dist)
 	}
 	for !q.IsEmpty() {
+
 		curr := q.Get()
 		track = append(track, curr.Value)
 		if curr.Value == target {
@@ -39,14 +40,16 @@ func AStar(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*gri
 				q.Put(n, total_cost)
 				n.Parent = curr.Value
 			}
+
 		}
 	}
-
 	// backtracking the path
 	curr := target
+	counter := 0
 	for curr != nil {
 		final_path = append(final_path, curr)
 		curr = curr.Parent
+		counter++
 	}
 
 	return track, final_path

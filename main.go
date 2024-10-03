@@ -87,6 +87,11 @@ func main() {
 			final_path = nil
 			timer = float32(0.)
 			trackIndex = 0
+			for i, row := range g {
+				for j := range row {
+					g[i][j].Parent = nil
+				}
+			}
 		}
 		if rgui.Button(button(2), "#62#"+algo_name) {
 			is_astar = !is_astar
@@ -99,21 +104,21 @@ func main() {
 
 		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
 			m := rl.GetMousePosition()
-			if m.Y < 800 && !source_set {
+			if m.Y < 800 {
 				selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
-				selected.IsSource = !selected.IsSource
-				source_set = true
-				source = selected
-			}
-		}
+				// setting the source
+				if !target_set && !source_set {
+					selected.IsSource = true
+					source_set = true
+					source = selected
+				} else {
+					if source_set && !target_set {
+						selected.IsTarget = true
+						target_set = true
+						target = selected
+					}
+				}
 
-		if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
-			m := rl.GetMousePosition()
-			if m.Y < 800 && !target_set {
-				selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
-				selected.IsTarget = !selected.IsTarget
-				target_set = true
-				target = selected
 			}
 		}
 
