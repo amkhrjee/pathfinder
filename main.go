@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"pfinder/algorithm"
 	"pfinder/grid"
+	"slices"
 
 	rgui "github.com/gen2brain/raylib-go/raygui"
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -117,7 +118,7 @@ func main() {
 
 		if source_set && target_set && track == nil {
 			if is_astar {
-				track, final_path = algorithm.Dfs(g, source, target)
+				track, final_path = algorithm.AStar(g, source, target)
 			} else {
 				track, final_path = algorithm.Ucs(g, source, target)
 			}
@@ -156,11 +157,27 @@ func main() {
 			}
 			for _, t := range track[:trackIndex-1] {
 				r := rl.Rectangle{
-					X:      float32(t.Col * grid.BOX_DIM),
-					Y:      float32(t.Row * grid.BOX_DIM),
-					Width:  float32(grid.BOX_DIM),
-					Height: float32(grid.BOX_DIM)}
+					X:      float32(t.Col*grid.BOX_DIM + grid.PADDING),
+					Y:      float32(t.Row*grid.BOX_DIM + grid.PADDING),
+					Width:  float32(grid.BOX_DIM - 2*grid.PADDING),
+					Height: float32(grid.BOX_DIM - 2*grid.PADDING)}
 				rl.DrawRectangleRec(r, rl.Pink)
+
+				if t == source {
+					rl.DrawRectangleRec(r, rl.Red)
+				}
+
+				if slices.Contains(final_path, t) {
+					x := float32(t.Col*grid.BOX_DIM + grid.PADDING)
+					y := float32(t.Row*grid.BOX_DIM + grid.PADDING)
+					r := rl.Rectangle{
+						X:      x,
+						Y:      y,
+						Width:  float32(grid.BOX_DIM - 2*grid.PADDING),
+						Height: float32(grid.BOX_DIM - 2*grid.PADDING)}
+					rl.DrawRectangleRec(r, rl.Red)
+
+				}
 			}
 		}
 		if track != nil && trackIndex >= len(track) {
