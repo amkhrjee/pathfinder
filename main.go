@@ -27,7 +27,7 @@ func makeGrid() *grid.Grid {
 }
 
 func button(index int) rl.Rectangle {
-	return rl.Rectangle{X: float32(10*(index+1)) + float32(index*250), Y: 815, Width: 250, Height: 70}
+	return rl.Rectangle{X: float32(12*(index+1)) + float32(index*250), Y: 815, Width: 250, Height: 70}
 }
 
 func main() {
@@ -58,21 +58,21 @@ func main() {
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.RayWhite)
+		rl.ClearBackground(rl.Black)
 
-		rgui.Label(
-			rl.Rectangle{
-				X:      float32(50*(1+1)) + float32(1*250),
-				Y:      815,
-				Width:  100,
-				Height: 70,
-			},
-			"@amkhrjee",
-		)
+		// rgui.Label(
+		// 	rl.Rectangle{
+		// 		X:      float32(50*(1+1)) + float32(1*250),
+		// 		Y:      815,
+		// 		Width:  100,
+		// 		Height: 70,
+		// 	},
+		// 	"@amkhrjee",
+		// )
 
 		timer += rl.GetFrameTime()
 
-		if rgui.Button(button(0), "#211#Reset") || rl.IsKeyPressed(rl.KeyR) {
+		if rgui.Button(button(0), "#211# Reset") || rl.IsKeyPressed(rl.KeyR) {
 			if source != nil {
 				source.IsSource = false
 				source = nil
@@ -93,7 +93,10 @@ func main() {
 				}
 			}
 		}
-		if rgui.Button(button(2), "#62#"+algo_name) {
+
+		rgui.Button(button(1), "#142# Settings")
+
+		if rgui.Button(button(2), "#42# "+algo_name) {
 			is_astar = !is_astar
 			if is_astar {
 				algo_name = "A* Search"
@@ -124,7 +127,7 @@ func main() {
 
 		if source_set && target_set && track == nil {
 			if is_astar {
-				track, final_path = algorithm.AStar(g, source, target)
+				track, final_path = algorithm.Dfs(g, source, target)
 			} else {
 				track, final_path = algorithm.Ucs(g, source, target)
 			}
