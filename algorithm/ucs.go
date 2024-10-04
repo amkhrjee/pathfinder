@@ -3,7 +3,6 @@ package algorithm
 import (
 	"math"
 	"pfinder/grid"
-	"slices"
 
 	pq "gopkg.in/dnaeon/go-priorityqueue.v1"
 )
@@ -17,6 +16,7 @@ func Ucs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.
 	for _, n := range neighbors(g, root) {
 		relative_cost := math.Abs(float64(n.Cost - root.Cost))
 		q.Put(n, relative_cost)
+		n.Visited = true
 	}
 	for !q.IsEmpty() {
 		curr := q.Get()
@@ -26,10 +26,11 @@ func Ucs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.
 		}
 
 		for _, n := range neighbors(g, curr.Value) {
-			if !slices.Contains(track, n) && n != start {
+			if !n.Visited {
 				total_cost := curr.Priority + math.Abs(float64(n.Cost-curr.Value.Cost))
 				q.Put(n, total_cost)
 				n.Parent = curr.Value
+				n.Visited = true
 			}
 		}
 	}

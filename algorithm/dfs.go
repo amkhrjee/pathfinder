@@ -2,7 +2,6 @@ package algorithm
 
 import (
 	"pfinder/grid"
-	"slices"
 
 	pq "gopkg.in/dnaeon/go-priorityqueue.v1"
 )
@@ -17,6 +16,7 @@ func Dfs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.
 	for _, n := range neighbors(g, root) {
 		depth := 1.
 		q.Put(n, depth)
+		n.Visited = true
 	}
 	for !q.IsEmpty() {
 
@@ -27,10 +27,11 @@ func Dfs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.
 		}
 
 		for _, n := range neighbors(g, curr.Value) {
-			if !slices.Contains(track, n) && n != start {
+			if !n.Visited {
 				depth := curr.Priority + 1
 				q.Put(n, depth)
 				n.Parent = curr.Value
+				n.Visited = true
 			}
 
 		}

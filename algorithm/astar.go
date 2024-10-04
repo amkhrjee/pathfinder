@@ -19,6 +19,7 @@ func AStar(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*gri
 		q.Put(n, relative_cost+euclidean_dist)
 		n.Visited = true
 	}
+
 	for !q.IsEmpty() {
 		curr := q.Get()
 		track = append(track, curr.Value)
