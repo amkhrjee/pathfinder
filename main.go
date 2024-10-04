@@ -83,6 +83,9 @@ func main() {
 	kValue := int32(2)
 	kvalueEditMode := false
 
+	speedValue := int32(1)
+	speedEditMode := false
+
 	theme := LIGHT
 
 	background_color := rl.RayWhite
@@ -197,12 +200,12 @@ func main() {
 				case algorithm.DFS:
 					track, final_path = algorithm.Dfs(g, source, target)
 				case algorithm.LBEAM:
-					track, final_path = algorithm.LBeam(g, source, target, 2)
+					track, final_path = algorithm.LBeam(g, source, target, int(kValue))
 				}
 			}
 
 			if track != nil && trackIndex < len(track) {
-				if timer >= 0.05 {
+				if timer >= float32(0.05)/float32(speedValue) {
 					// if timer >= 0.02 {
 					box := track[trackIndex]
 					if !slices.Contains(visited, box) {
@@ -254,12 +257,21 @@ func main() {
 					rl.DrawRectangleRec(r, rl.Red)
 				}
 
+				last := track[len(track)-1]
 				r := rl.Rectangle{
-					X:      float32(track[len(track)-1].Col*grid.BOX_DIM + grid.PADDING),
-					Y:      float32(track[len(track)-1].Row*grid.BOX_DIM + grid.PADDING),
+					X:      float32(last.Col*grid.BOX_DIM + grid.PADDING),
+					Y:      float32(last.Row*grid.BOX_DIM + grid.PADDING),
 					Width:  float32(grid.BOX_DIM - 2*grid.PADDING),
 					Height: float32(grid.BOX_DIM - 2*grid.PADDING)}
 				rl.DrawRectangleRec(r, rl.Green)
+				if last != target {
+					rl.DrawText(
+						"X",
+						last.Col*grid.BOX_DIM+grid.PADDING+5,
+						last.Row*grid.BOX_DIM+grid.PADDING,
+						35,
+						rl.Red)
+				}
 			}
 
 			if track != nil {
@@ -271,7 +283,7 @@ func main() {
 				}
 				rl.DrawRectangleRec(l, color.RGBA{background_color.R, background_color.G, background_color.B, 200})
 				rgui.Label(l,
-					fmt.Sprintf(" Visited: %d", len(visited)),
+					fmt.Sprintf("  Visited: %d", len(visited)),
 				)
 			}
 		}
@@ -294,9 +306,9 @@ func main() {
 			}
 
 			rgui.Label(rectangle(0, 1), "Speedup (x)")
-			speed := rgui.Spinner(rectangle(1, 1), "", &kValue, 1, 4, kvalueEditMode)
+			speed := rgui.Spinner(rectangle(1, 1), "", &speedValue, 1, 4, speedEditMode)
 			if speed < 1 || speed > 4 {
-				kvalueEditMode = !kvalueEditMode
+				speedEditMode = !speedEditMode
 			}
 
 			n := rectangle(0, 2)
