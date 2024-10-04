@@ -9,17 +9,9 @@ Well, think of them as hills and valleys. The more purple the greater the height
 
 ## Demo
 
-<div style="display: flex; justify-content: space-between;">
-<div>
-Algorithms Supported:
+<div style="display: flex; justify-content: space-between;"><div>Algorithms Supported:<ul><li>A* Search</li><li>Local Beam Search</li><li>Uniform Cost Search</li><li>Depth First Search</li><li>Breadth First Search</li></ul></div><img src="./screenshots/algorithms.gif"></div><br>
 
-- A* Search
-- Local Beam Search
-- Uniform Cost Search
-- Depth First Search
-- Breadth First Search
-</div><img src="./screenshots/algorithms.gif"></div><br><div align="center" style="display: flex; justify-content: space-between;">
-<img width="600" height="600" src="./screenshots/astar.gif"><img width="600" height="600" src="./screenshots/dark.gif"></div>
+![](./screenshots/recording.gif)
 
 ## How to run on your computer
 
