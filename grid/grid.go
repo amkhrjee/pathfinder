@@ -7,12 +7,13 @@ const BOX_DIM = 40
 const PADDING = 4
 
 type Box struct {
-	Row      int32
-	Col      int32
-	Cost     int
+	Row      float64
+	Col      float64
+	Cost     float64
 	IsSource bool
 	IsTarget bool
 	Parent   *Box
+	Visited  bool
 }
 
 const ROWS = HEIGHT / BOX_DIM

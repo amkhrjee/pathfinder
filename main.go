@@ -13,17 +13,18 @@ import (
 )
 
 func makeGrid() *grid.Grid {
-	r := rand.New(rand.NewSource(42))
+	r := rand.New(rand.NewSource(7))
 	g := grid.Grid{}
 	for i, row := range g {
 		for j := range row {
 			g[i][j] = grid.Box{
-				Row:      int32(i),
-				Col:      int32(j),
+				Row:      float64(i),
+				Col:      float64(j),
 				IsSource: false,
 				IsTarget: false,
-				Cost:     r.Intn(10-1) + 1,
+				Cost:     float64(r.Intn(10-1) + 1),
 				Parent:   nil,
+				Visited:  false,
 			}
 		}
 	}
@@ -90,6 +91,13 @@ func main() {
 
 	background_color := rl.RayWhite
 
+	infoLabel := rl.Rectangle{
+		X:      0,
+		Y:      750,
+		Width:  150,
+		Height: 50,
+	}
+
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		if theme == LIGHT {
@@ -116,7 +124,7 @@ func main() {
 				if box.IsTarget {
 					rl.DrawRectangleLinesEx(r, 10.0, rl.Red)
 				}
-				rl.DrawRectangleRec(r, grid.Colors[box.Cost-1])
+				rl.DrawRectangleRec(r, grid.Colors[int(box.Cost-1)])
 			}
 		}
 
@@ -140,6 +148,7 @@ func main() {
 			for i, row := range g {
 				for j := range row {
 					g[i][j].Parent = nil
+					g[i][j].Visited = false
 				}
 			}
 		}
@@ -176,6 +185,7 @@ func main() {
 					// setting the source
 					if !target_set && !source_set {
 						selected.IsSource = true
+						selected.Visited = true
 						source_set = true
 						source = selected
 					} else {
@@ -267,22 +277,17 @@ func main() {
 				if last != target {
 					rl.DrawText(
 						"X",
-						last.Col*grid.BOX_DIM+grid.PADDING+5,
-						last.Row*grid.BOX_DIM+grid.PADDING,
+						int32(last.Col*grid.BOX_DIM+grid.PADDING+5),
+						int32(last.Row*grid.BOX_DIM+grid.PADDING),
 						35,
 						rl.Red)
 				}
 			}
 
 			if track != nil {
-				l := rl.Rectangle{
-					X:      0,
-					Y:      750,
-					Width:  150,
-					Height: 50,
-				}
-				rl.DrawRectangleRec(l, color.RGBA{background_color.R, background_color.G, background_color.B, 200})
-				rgui.Label(l,
+
+				rl.DrawRectangleRec(infoLabel, color.RGBA{background_color.R, background_color.G, background_color.B, 200})
+				rgui.Label(infoLabel,
 					fmt.Sprintf("  Visited: %d", len(visited)),
 				)
 			}
@@ -328,7 +333,7 @@ func main() {
 				Y:      f.Y,
 				Width:  200,
 				Height: 20,
-			}, "Pathfinder v0.1.3")
+			}, "Pathfinder v0.1.2")
 			rgui.Label(rl.Rectangle{
 				X:      five.X + 120,
 				Y:      five.Y,

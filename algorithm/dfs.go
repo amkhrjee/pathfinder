@@ -28,7 +28,7 @@ func Dfs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.
 
 		for _, n := range neighbors(g, curr.Value) {
 			if !slices.Contains(track, n) && n != start {
-				depth := float64(n.Cost + 1)
+				depth := curr.Priority + 1
 				q.Put(n, depth)
 				n.Parent = curr.Value
 			}
