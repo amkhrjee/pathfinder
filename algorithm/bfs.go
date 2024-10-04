@@ -37,11 +37,9 @@ func Bfs(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.
 	}
 	// backtracking the path
 	curr := target
-	counter := 0
 	for curr != nil {
 		final_path = append(final_path, curr)
 		curr = curr.Parent
-		counter++
 	}
 
 	return track, final_path
