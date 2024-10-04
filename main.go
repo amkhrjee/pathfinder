@@ -146,7 +146,6 @@ func main() {
 			case algorithm.LBEAM:
 				track, final_path = algorithm.LBeam(g, source, target, 2)
 			}
-			fmt.Println("Ran: ", algo_name)
 		}
 
 		// Draws the grid
