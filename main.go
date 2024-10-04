@@ -85,9 +85,16 @@ func main() {
 
 	theme := LIGHT
 
+	background_color := rl.RayWhite
+
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.RayWhite)
+		if theme == LIGHT {
+			background_color = rl.RayWhite
+		} else {
+			background_color = rl.Black
+		}
+		rl.ClearBackground(background_color)
 
 		timer += rl.GetFrameTime()
 
@@ -262,7 +269,7 @@ func main() {
 					Width:  150,
 					Height: 50,
 				}
-				rl.DrawRectangleRec(l, color.RGBA{rl.RayWhite.R, rl.RayWhite.G, rl.RayWhite.B, 200})
+				rl.DrawRectangleRec(l, color.RGBA{background_color.R, background_color.G, background_color.B, 200})
 				rgui.Label(l,
 					fmt.Sprintf(" Visited: %d", len(visited)),
 				)
@@ -276,8 +283,10 @@ func main() {
 				Width:  400,
 				Height: 400,
 			}
-			rl.DrawRectangleRec(r, rl.RayWhite)
-			rgui.WindowBox(r, "#142# Settings")
+			isClosePressed := rgui.WindowBox(r, "#142# Settings")
+			if isClosePressed {
+				isSettingsOpen = false
+			}
 			rgui.Label(rectangle(0, 0), "Local Beam K")
 			res := rgui.Spinner(rectangle(1, 0), "", &kValue, 1, 4, kvalueEditMode)
 			if res < 1 || res > 4 {
