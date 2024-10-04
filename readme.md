@@ -18,16 +18,8 @@ Algorithms Supported:
 - Uniform Cost Search
 - Depth First Search
 - Breadth First Search
-</div>
-<img src="./screenshots/algorithms.gif">
-</div>
-<br>
-
-
-<div style="display: flex; justify-content: space-between;">
-<img src="./screenshots/astar.gif">
-<img src="./screenshots/dark.gif">
-</div>
+</div><img src="./screenshots/algorithms.gif"></div><br><div align="center" style="display: flex; gap: 1rem">
+<img width="200" height="200" src="./screenshots/astar.gif"><img width="200" height="200" src="./screenshots/dark.gif"></div>
 
 ## How to run on your computer
 
