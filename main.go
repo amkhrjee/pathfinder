@@ -278,14 +278,11 @@ func main() {
 			}
 			rl.DrawRectangleRec(r, rl.RayWhite)
 			rgui.WindowBox(r, "#142# Settings")
-
 			rgui.Label(rectangle(0, 0), "Local Beam K")
 			res := rgui.Spinner(rectangle(1, 0), "", &kValue, 1, 4, kvalueEditMode)
 			if res < 1 || res > 4 {
 				kvalueEditMode = !kvalueEditMode
 			}
-
-			// rgui.Label(rectangle(0, 1), "Theme")
 
 			rgui.Label(rectangle(0, 1), "Speedup (x)")
 			speed := rgui.Spinner(rectangle(1, 1), "", &kValue, 1, 4, kvalueEditMode)
@@ -323,6 +320,14 @@ func main() {
 				Width:  300,
 				Height: 20,
 			}, "made at Tezpur University")
+
+			// Closing the window
+			if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
+				m := rl.GetMousePosition()
+				if (m.X > 600 || m.X < 200) || (m.Y > 600 || m.Y < 200) {
+					isSettingsOpen = false
+				}
+			}
 
 		}
 
