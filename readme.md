@@ -52,4 +52,4 @@ To build the binary without the debug console, run:
 
 ```
 go build -tags opengl21 -ldflags "-H=windowsgui -s -w"
-``
+```
