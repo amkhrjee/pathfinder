@@ -1,6 +1,8 @@
 package algorithm
 
-import "pfinder/grid"
+import (
+	"pfinder/grid"
+)
 
 func neighbors(g *grid.Grid, b *grid.Box) []*grid.Box {
 	n := make([]*grid.Box, 0)
@@ -38,3 +40,14 @@ func neighbors(g *grid.Grid, b *grid.Box) []*grid.Box {
 	// }
 	return n
 }
+
+const (
+	_ int = iota
+	ASTAR
+	UCS
+	BFS
+	DFS
+	LBEAM
+)
+
+const ALGORITHMS_COUNT = 6

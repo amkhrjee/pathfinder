@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"image/color"
 	"math/rand"
 	"pfinder/algorithm"
 	"pfinder/grid"
@@ -11,6 +13,7 @@ import (
 )
 
 func makeGrid() *grid.Grid {
+	r := rand.New(rand.NewSource(42))
 	g := grid.Grid{}
 	for i, row := range g {
 		for j := range row {
@@ -19,7 +22,7 @@ func makeGrid() *grid.Grid {
 				Col:      int32(j),
 				IsSource: false,
 				IsTarget: false,
-				Cost:     rand.Intn(10-1) + 1,
+				Cost:     r.Intn(10-1) + 1,
 				Parent:   nil,
 			}
 		}
@@ -47,6 +50,7 @@ func main() {
 	var target *grid.Box = nil
 	var track []*grid.Box = nil
 	var final_path []*grid.Box = nil
+	var visited []*grid.Box = nil
 
 	timer := float32(0.)
 	trackIndex := 0
@@ -54,7 +58,8 @@ func main() {
 	rgui.LoadStyle("./style_bluish.rgs")
 	rgui.SetStyle(rgui.DEFAULT, rgui.TEXT_SIZE, 20)
 	rl.SetWindowIcon(*rl.LoadImage("./assets/windowicon.png"))
-	is_astar := true
+
+	curr_algo := algorithm.ASTAR
 	algo_name := "A* Search"
 
 	for !rl.WindowShouldClose() {
@@ -76,8 +81,10 @@ func main() {
 			target_set = false
 			track = nil
 			final_path = nil
+			visited = nil
 			timer = float32(0.)
 			trackIndex = 0
+
 			for i, row := range g {
 				for j := range row {
 					g[i][j].Parent = nil
@@ -88,11 +95,21 @@ func main() {
 		rgui.Button(button(1), "#142# Settings")
 
 		if rgui.Button(button(2), "#97# "+algo_name) {
-			is_astar = !is_astar
-			if is_astar {
+			curr_algo = (curr_algo + 1) % algorithm.ALGORITHMS_COUNT
+			if curr_algo == 0 {
+				curr_algo = 1
+			}
+			switch curr_algo {
+			case algorithm.ASTAR:
 				algo_name = "A* Search"
-			} else {
-				algo_name = "Djikstra UCS"
+			case algorithm.UCS:
+				algo_name = "Unified Cost"
+			case algorithm.BFS:
+				algo_name = "Breadth First"
+			case algorithm.DFS:
+				algo_name = "Depth First"
+			case algorithm.LBEAM:
+				algo_name = "Local Beam"
 			}
 		}
 
@@ -106,7 +123,7 @@ func main() {
 					source_set = true
 					source = selected
 				} else {
-					if source_set && !target_set {
+					if source_set && !target_set && selected != source {
 						selected.IsTarget = true
 						target_set = true
 						target = selected
@@ -117,13 +134,21 @@ func main() {
 		}
 
 		if source_set && target_set && track == nil {
-			if is_astar {
+			switch curr_algo {
+			case algorithm.ASTAR:
 				track, final_path = algorithm.AStar(g, source, target)
-			} else {
+			case algorithm.UCS:
 				track, final_path = algorithm.Ucs(g, source, target)
+			case algorithm.BFS:
+				track, final_path = algorithm.Bfs(g, source, target)
+			case algorithm.DFS:
+				track, final_path = algorithm.Dfs(g, source, target)
+			case algorithm.LBEAM:
+				track, final_path = algorithm.LBeam(g, source, target, 2)
 			}
 		}
 
+		// Draws the grid
 		for _, row := range g {
 			for _, box := range row {
 				r := rl.Rectangle{
@@ -144,7 +169,11 @@ func main() {
 
 		if track != nil && trackIndex < len(track) {
 			if timer >= 0.05 {
+				// if timer >= 0.02 {
 				box := track[trackIndex]
+				if !slices.Contains(visited, box) {
+					visited = append(visited, box)
+				}
 				r := rl.Rectangle{
 					X:      float32(box.Col * grid.BOX_DIM),
 					Y:      float32(box.Row * grid.BOX_DIM),
@@ -197,7 +226,19 @@ func main() {
 				Width:  float32(grid.BOX_DIM - 2*grid.PADDING),
 				Height: float32(grid.BOX_DIM - 2*grid.PADDING)}
 			rl.DrawRectangleRec(r, rl.Green)
+		}
 
+		if track != nil {
+			l := rl.Rectangle{
+				X:      0,
+				Y:      750,
+				Width:  150,
+				Height: 50,
+			}
+			rl.DrawRectangleRec(l, color.RGBA{rl.RayWhite.R, rl.RayWhite.G, rl.RayWhite.B, 200})
+			rgui.Label(l,
+				fmt.Sprintf(" Visited: %d", len(visited)),
+			)
 		}
 
 		rl.EndDrawing()
