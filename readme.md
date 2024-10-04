@@ -42,6 +42,7 @@ Follow these steps:
 4. If you see a Windows dialogue saying the program might be unsafe, click on "Run Anyway". 
 
 ## Development Setup
+
 ### Windows
 
 Make sure to have the `raylib.dll` and `style_bluish.rgs` files in the root directory. 
