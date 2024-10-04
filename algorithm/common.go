@@ -1,8 +1,13 @@
 package algorithm
 
 import (
+	"math"
 	"pfinder/grid"
 )
+
+func get_distance(x *grid.Box, y *grid.Box) float64 {
+	return math.Sqrt(math.Pow(x.Col-y.Col, 2) + math.Pow(x.Row-y.Row, 2))
+}
 
 func neighbors(g *grid.Grid, b *grid.Box) []*grid.Box {
 	n := make([]*grid.Box, 0)

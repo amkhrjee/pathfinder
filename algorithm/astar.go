@@ -7,10 +7,6 @@ import (
 	pq "gopkg.in/dnaeon/go-priorityqueue.v1"
 )
 
-func get_distance(x *grid.Box, y *grid.Box) float64 {
-	return math.Sqrt(math.Pow(x.Col-y.Col, 2) + math.Pow(x.Row-y.Row, 2))
-}
-
 // A* Search
 func AStar(g *grid.Grid, start *grid.Box, target *grid.Box) ([]*grid.Box, []*grid.Box) {
 	q := pq.New[*grid.Box, float64](pq.MinHeap)
