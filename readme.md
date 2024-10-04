@@ -9,14 +9,39 @@ Well, think of them as hills and valleys. The more purple the greater the height
 
 ## Demo
 
-Currently only two algorithms are supported: A* & Uniform Cost Search (Djikstra's Search)
+<div style="display: flex; justify-content: space-between;">
+<div>
+Algorithms Supported:
 
-Here's a side by side comparison of the two (although not technically fair since the grids are different)
+- A* Search
+- Local Beam Search
+- Uniform Cost Search
+- Depth First Search
+- Breadth First Search
+</div>
+<img src="./screenshots/algorithms.gif">
+</div>
+<br>
 
-![](./screenshots/recording.gif)
+
+<div style="display: flex; justify-content: space-between;">
+<img src="./screenshots/astar.gif">
+<img src="./screenshots/dark.gif">
+</div>
 
 ## How to run on your computer
 
+Follow these steps:
+
+1. Download the `Pathfinder_Portable_Windows_amd64.zip` file from the [latest release](https://github.com/amkhrjee/pathfinder/releases/latest).
+
+2. Extract the zip into a folder.
+
+3. Run `pfinder.exe` by double-clicking. 
+
+4. If you see a Windows dialogue saying the program might be unsafe, click on "Run Anyway". 
+
+## Development Setup
 ### Windows
 
 Make sure to have the `raylib.dll` and `style_bluish.rgs` files in the root directory. 
@@ -29,5 +54,8 @@ Run the following to run the binary:
 go env -w CGO_ENABLED=1
 go run ./main.go
 ```
-- Left Click to select a starting point
-- Right Click to select a target point
+To build the binary without the debug console, run:
+
+```
+go build -ldflags "-H=windowsgui"
+``
