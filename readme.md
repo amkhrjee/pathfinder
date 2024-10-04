@@ -9,7 +9,8 @@ Well, think of them as hills and valleys. The more purple the greater the height
 
 ## Demo
 
-<img style="scale: 0.7" align="right" src="./screenshots/algorithms.gif">
+![](./screenshots/algorithms.gif)
+
 Algorithms Supported:
 
 - A* Search
