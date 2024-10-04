@@ -154,7 +154,7 @@ func main() {
 			case algorithm.ASTAR:
 				algo_name = "A* Search"
 			case algorithm.UCS:
-				algo_name = "Unified Cost"
+				algo_name = "Uniform Cost"
 			case algorithm.BFS:
 				algo_name = "Breadth First"
 			case algorithm.DFS:
