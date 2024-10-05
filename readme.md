@@ -25,6 +25,8 @@ Algorithms Supported:
 
 ## How to run on your computer
 
+### Windows
+
 Follow these steps:
 
 1. Download the `Pathfinder_Portable_Windows_amd64.zip` file from the [latest release](https://github.com/amkhrjee/pathfinder/releases/latest).
@@ -34,6 +36,12 @@ Follow these steps:
 3. Run `pfinder.exe` by double-clicking. 
 
 4. If you see a Windows dialogue saying the program might be unsafe, click on "Run Anyway". 
+
+### Linux (only tested on WSL2)
+
+1. Untar the tarball
+
+2. Run the `./pfinder` binary
 
 ## Development Setup
 
@@ -51,4 +59,18 @@ To build the binary without the debug console, run:
 
 ```
 go build -tags opengl21 -ldflags "-H=windowsgui -s -w"
+```
+
+### Linux
+
+Same as Windows, just download these dependencies:
+
+```
+apt-get install libgl1-mesa-dev libxi-dev libxcursor-dev libxrandr-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+```
+
+To produce the final build binary, just omit the `-H-windowsgui` flag from the previous build command.
+
+```
+go build -tags opengl21 -ldflags "-s -w"
 ```
