@@ -39,9 +39,7 @@ Follow these steps:
 
 ### Windows
 
-Make sure to have the `raylib.dll` and `style_bluish.rgs` files in the root directory. 
-
-Also, having `gcc` on the system Path is must.
+You should have `gcc` on the system path.
 
 Run the following to run the binary:
 
