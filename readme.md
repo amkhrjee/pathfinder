@@ -39,7 +39,7 @@ Follow these steps:
 
 ### Linux (only tested on WSL2)
 
-1. Untar the tarball
+1. Untar the `.tar` downloaded from the [latest release](https://github.com/amkhrjee/pathfinder/releases/latest).
 
 2. Run the `./pfinder` binary
 
