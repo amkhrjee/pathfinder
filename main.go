@@ -344,10 +344,18 @@ func main() {
 				Width:  150,
 			}, "Light Mode;Dark Mode", theme)
 
-			beg := 4
-			f := rectangle(0, beg+1)
-			five := rectangle(0, beg+2)
-			s := rectangle(0, beg+3)
+			beg := 3
+			t := rectangle(0, beg+1)
+			f := rectangle(0, beg+2)
+			five := rectangle(0, beg+3)
+			s := rectangle(0, beg+4)
+			rgui.Label(rl.Rectangle{
+				X:      t.X + 50,
+				Y:      t.Y,
+				Width:  300,
+				Height: 20,
+			}, "#21#Right Click to add obstacle")
+
 			rgui.Label(rl.Rectangle{
 				X:      f.X + 110,
 				Y:      f.Y,
