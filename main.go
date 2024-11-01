@@ -191,17 +191,19 @@ func main() {
 				m := rl.GetMousePosition()
 				if m.Y < 800 {
 					selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
-					// setting the source
-					if !target_set && !source_set {
-						selected.IsSource = true
-						selected.Visited = true
-						source_set = true
-						source = selected
-					} else {
-						if source_set && !target_set && selected != source {
-							selected.IsTarget = true
-							target_set = true
-							target = selected
+					if !selected.IsObstacle {
+						// setting the source
+						if !target_set && !source_set {
+							selected.IsSource = true
+							selected.Visited = true
+							source_set = true
+							source = selected
+						} else {
+							if source_set && !target_set && selected != source {
+								selected.IsTarget = true
+								target_set = true
+								target = selected
+							}
 						}
 					}
 				}
@@ -211,8 +213,9 @@ func main() {
 				m := rl.GetMousePosition()
 				if m.Y < 800 {
 					selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
-					// setting the source
-					selected.IsObstacle = !selected.IsObstacle
+					if !selected.IsSource && !selected.IsTarget {
+						selected.IsObstacle = !selected.IsObstacle
+					}
 				}
 			}
 
