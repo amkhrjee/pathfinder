@@ -353,7 +353,7 @@ func main() {
 				Y:      f.Y,
 				Width:  200,
 				Height: 20,
-			}, "Pathfinder v0.1.2")
+			}, "Pathfinder v0.1.3")
 			rgui.Label(rl.Rectangle{
 				X:      five.X + 120,
 				Y:      five.Y,
