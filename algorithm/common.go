@@ -16,19 +16,31 @@ func neighbors(g *grid.Grid, b *grid.Box) []*grid.Box {
 	bCol := int(b.Col)
 	// north neighbor
 	if b.Row < grid.ROWS-1 {
-		n = append(n, &g[bRow+1][bCol])
+		box := &g[bRow+1][bCol]
+		if !box.IsObstacle {
+			n = append(n, box)
+		}
 	}
 	// south neighbor
 	if b.Row > 0 {
-		n = append(n, &g[bRow-1][bCol])
+		box := &g[bRow-1][bCol]
+		if !box.IsObstacle {
+			n = append(n, box)
+		}
 	}
 	// right neighbor
 	if b.Col < grid.COLS-1 {
-		n = append(n, &g[bRow][bCol+1])
+		box := &g[bRow][bCol+1]
+		if !box.IsObstacle {
+			n = append(n, box)
+		}
 	}
 	// left neighbor
 	if b.Col > 0 {
-		n = append(n, &g[bRow][bCol-1])
+		box := &g[bRow][bCol-1]
+		if !box.IsObstacle {
+			n = append(n, box)
+		}
 	}
 	// // north west
 	// if b.Col > 0 && b.Row > 0 {

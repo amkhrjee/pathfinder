@@ -18,13 +18,14 @@ func makeGrid() *grid.Grid {
 	for i, row := range g {
 		for j := range row {
 			g[i][j] = grid.Box{
-				Row:      float64(i),
-				Col:      float64(j),
-				IsSource: false,
-				IsTarget: false,
-				Cost:     float64(r.Intn(10-1) + 1),
-				Parent:   nil,
-				Visited:  false,
+				Row:        float64(i),
+				Col:        float64(j),
+				IsSource:   false,
+				IsTarget:   false,
+				Cost:       float64(r.Intn(10-1) + 1),
+				Parent:     nil,
+				Visited:    false,
+				IsObstacle: false,
 			}
 		}
 	}
@@ -124,7 +125,11 @@ func main() {
 				if box.IsTarget {
 					rl.DrawRectangleLinesEx(r, 10.0, rl.Red)
 				}
-				rl.DrawRectangleRec(r, grid.Colors[int(box.Cost-1)])
+				if box.IsObstacle {
+					rl.DrawRectangleRec(r, rl.DarkGray)
+				} else {
+					rl.DrawRectangleRec(r, grid.Colors[int(box.Cost-1)])
+				}
 			}
 		}
 
@@ -195,7 +200,15 @@ func main() {
 							target = selected
 						}
 					}
+				}
+			}
 
+			if rl.IsMouseButtonPressed((rl.MouseButtonRight)) {
+				m := rl.GetMousePosition()
+				if m.Y < 800 {
+					selected := &g[int(m.Y/grid.BOX_DIM)][int(m.X/grid.BOX_DIM)]
+					// setting the source
+					selected.IsObstacle = !selected.IsObstacle
 				}
 			}
 
