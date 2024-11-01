@@ -126,7 +126,11 @@ func main() {
 					rl.DrawRectangleLinesEx(r, 10.0, rl.Red)
 				}
 				if box.IsObstacle {
-					rl.DrawRectangleRec(r, rl.DarkGray)
+					if theme == DARK {
+						rl.DrawRectangleRec(r, rl.LightGray)
+					} else {
+						rl.DrawRectangleRec(r, rl.DarkGray)
+					}
 				} else {
 					rl.DrawRectangleRec(r, grid.Colors[int(box.Cost-1)])
 				}
