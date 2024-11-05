@@ -6,7 +6,13 @@ import (
 )
 
 func get_distance(x *grid.Box, y *grid.Box) float64 {
-	return math.Sqrt(math.Pow(x.Col-y.Col, 2) + math.Pow(x.Row-y.Row, 2))
+	// Good idea to scale down the distance
+	// to be in the range of relative cost between the tiles
+	// Thanks to this reddit comment: https://www.reddit.com/r/computerscience/comments/1fw9q09/comment/lqeqgdd/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+	// Scaling with formula from: https://stackoverflow.com/a/5295202/12404524
+	actual_distance := math.Sqrt(math.Pow(x.Col-y.Col, 2) + math.Pow(x.Row-y.Row, 2))
+	scaled_distance := 10 * (actual_distance - 0) / 26.8
+	return scaled_distance
 }
 
 func neighbors(g *grid.Grid, b *grid.Box) []*grid.Box {
